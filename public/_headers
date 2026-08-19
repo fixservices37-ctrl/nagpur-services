@@ -1,0 +1,13 @@
+# Security headers (Cloudflare Pages / Netlify syntax).
+# The build target is Cloudflare, which reads this file from the build output.
+/*
+  X-Content-Type-Options: nosniff
+  X-Frame-Options: SAMEORIGIN
+  Referrer-Policy: strict-origin-when-cross-origin
+  Permissions-Policy: geolocation=(self), camera=(), microphone=(), payment=()
+  Strict-Transport-Security: max-age=31536000; includeSubDomains
+
+# The admin panel must never be indexed or cached by a shared cache.
+/admin/*
+  X-Robots-Tag: noindex, nofollow
+  Cache-Control: no-store

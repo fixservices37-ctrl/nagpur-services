@@ -1,0 +1,92 @@
+// Prisma is the typed, server-side view of the Supabase database.
+//
+// Scope, on purpose:
+//   * The browser and SSR keep using supabase-js — that path goes through the
+//     REST API where Row Level Security is enforced, which is what protects
+//     customer data. Prisma connects as the database owner and bypasses RLS,
+//     so it must never run in code that a visitor can reach.
+//   * Prisma is for Node-side tooling: admin/back-office scripts, one-off data
+//     fixes, reporting and a typed model of the schema.
+//
+// The SQL files in supabase/migrations/ remain the source of truth for the
+// schema. Refresh this file from the live database with:  npm run db:pull
+
+generator client {
+  provider = "prisma-client"
+  output   = "../src/generated/prisma"
+}
+
+// Prisma 7 keeps connection URLs out of the schema: the CLI reads them from
+// prisma.config.ts, and PrismaClient gets a driver adapter at runtime.
+datasource db {
+  provider = "postgresql"
+  schemas  = ["auth", "public"]
+}
+
+/// Service requests submitted from the public website.
+model ServiceRequest {
+  id                 String    @id @default(dbgenerated("gen_random_uuid()")) @db.Uuid
+  requestNumber      String    @unique @map("request_number")
+  fullName           String    @map("full_name")
+  mobile             String
+  service            String
+  problemDescription String    @map("problem_description")
+  fullAddress        String    @map("full_address")
+  area               String?
+  latitude           Float?
+  longitude          Float?
+  preferredDate      DateTime? @map("preferred_date") @db.Date
+  preferredTime      String?   @map("preferred_time")
+  photoPaths         String[]  @default([]) @map("photo_paths")
+  status             String    @default("New")
+  adminNotes         String?   @map("admin_notes")
+  assignedTo         String?   @map("assigned_to")
+  createdAt          DateTime  @default(now()) @map("created_at") @db.Timestamptz(6)
+  updatedAt          DateTime  @default(now()) @map("updated_at") @db.Timestamptz(6)
+  updatedBy          String?   @map("updated_by") @db.Uuid
+
+  @@index([createdAt(sort: Desc)], map: "service_requests_created_at_idx")
+  @@index([status], map: "service_requests_status_idx")
+  @@index([service], map: "service_requests_service_idx")
+  @@index([mobile], map: "service_requests_mobile_idx")
+  @@map("service_requests")
+  @@schema("public")
+}
+
+/// Grants a Supabase Auth user access to the admin panel.
+model UserRole {
+  userId    String   @map("user_id") @db.Uuid
+  role      AppRole  @default(admin)
+  createdAt DateTime @default(now()) @map("created_at") @db.Timestamptz(6)
+
+  user AuthUser @relation(fields: [userId], references: [id], onDelete: Cascade)
+
+  @@id([userId, role])
+  @@map("user_roles")
+  @@schema("public")
+}
+
+enum AppRole {
+  admin
+  staff
+
+  @@map("app_role")
+  @@schema("public")
+}
+
+/// Supabase-managed auth table. Treat as READ-ONLY from Prisma: Supabase owns
+/// the columns not modelled here. Accounts are created with the Supabase Admin
+/// API or `npm run admin:create`, never with prisma.authUser.create().
+model AuthUser {
+  id              String    @id @db.Uuid
+  email           String?   @unique
+  emailConfirmedAt DateTime? @map("email_confirmed_at") @db.Timestamptz(6)
+  lastSignInAt    DateTime? @map("last_sign_in_at") @db.Timestamptz(6)
+  createdAt       DateTime? @map("created_at") @db.Timestamptz(6)
+  updatedAt       DateTime? @map("updated_at") @db.Timestamptz(6)
+
+  roles UserRole[]
+
+  @@map("users")
+  @@schema("auth")
+}
