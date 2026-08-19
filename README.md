@@ -91,6 +91,11 @@ Migrations live in `supabase/migrations/` and run in filename order. Apply them 
 Supabase CLI (`supabase db push`) or by pasting each file into the SQL editor of the
 Supabase dashboard.
 
+> **Not `prisma migrate deploy`.** The schema is authored in raw SQL because Supabase
+> already owns the `auth` schema and its own migration history. Prisma is used only for
+> read-side introspection (`db:pull`) and for Node-side scripts, not for applying schema
+> changes.
+
 | Migration                      | Contents                                                     |
 | ------------------------------ | ------------------------------------------------------------ |
 | `..._service_requests`         | `service_requests` table, insert-only RLS for the public form |
