@@ -5,7 +5,7 @@ import { Button } from "@/components/ui/button";
 import { PageHeader, Section } from "@/components/site/PageHeader";
 import { telHref, whatsappHref } from "@/lib/business";
 import { seo } from "@/lib/seo";
-import { serviceAreas } from "@/lib/services";
+import { useServiceAreas } from "@/lib/useServiceAreas";
 
 export const Route = createFileRoute("/service-areas")({
   head: () =>
@@ -19,6 +19,7 @@ export const Route = createFileRoute("/service-areas")({
 });
 
 function ServiceAreasPage() {
+  const { data: areas = [] } = useServiceAreas();
   return (
     <>
       <PageHeader
@@ -27,14 +28,14 @@ function ServiceAreasPage() {
         subtitle="Currently serving Nagpur and nearby areas. Contact us to confirm service availability in your location."
       />
       <Section>
-        <ul className="grid gap-3 sm:grid-cols-3 lg:grid-cols-4">
-          {serviceAreas.map((area) => (
+        <ul className="grid gap-2.5 grid-cols-2 sm:grid-cols-3 sm:gap-3 lg:grid-cols-4">
+          {areas.map((area) => (
             <li
-              key={area}
+              key={area.id}
               className="flex items-center gap-2 rounded-xl border border-border bg-card px-4 py-3 text-sm font-medium text-foreground"
             >
               <MapPin className="h-4 w-4 shrink-0 text-primary" />
-              {area}
+              {area.name}
             </li>
           ))}
         </ul>
@@ -45,16 +46,16 @@ function ServiceAreasPage() {
           planning the visit.
         </p>
 
-        <div className="mt-8 flex flex-wrap gap-3">
-          <Button variant="accent" size="lg" asChild>
+        <div className="mt-8 grid gap-2 sm:flex sm:flex-wrap sm:gap-3">
+          <Button variant="accent" size="lg" asChild className="w-full sm:w-auto">
             <Link to="/request-service">Request a Service</Link>
           </Button>
-          <Button variant="outline" size="lg" asChild>
+          <Button variant="outline" size="lg" asChild className="w-full sm:w-auto">
             <a href={telHref}>
               <Phone /> Call Now
             </a>
           </Button>
-          <Button variant="whatsapp" size="lg" asChild>
+          <Button variant="whatsapp" size="lg" asChild className="w-full sm:w-auto">
             <a
               href={whatsappHref("Hi, do you provide service in my area of Nagpur?")}
               target="_blank"

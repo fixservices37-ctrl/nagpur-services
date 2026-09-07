@@ -1,9 +1,11 @@
 import { Link, useNavigate, useRouterState } from "@tanstack/react-router";
 import {
   ClipboardList,
+  Droplet,
   LayoutDashboard,
   Loader2,
   LogOut,
+  MapPin,
   Menu,
   ShieldAlert,
   Wrench,
@@ -18,6 +20,8 @@ import { business } from "@/lib/business";
 const navItems = [
   { to: "/admin", label: "Dashboard", icon: LayoutDashboard, exact: true },
   { to: "/admin/requests", label: "Service Requests", icon: ClipboardList, exact: false },
+  { to: "/admin/service-areas", label: "Service Areas", icon: MapPin, exact: false },
+  { to: "/admin/ro-brands", label: "RO Brands", icon: Droplet, exact: false },
 ] as const;
 
 /**

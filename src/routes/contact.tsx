@@ -30,11 +30,11 @@ function ContactPage() {
         subtitle="The fastest way to reach us is a phone call or WhatsApp message. You can also send a service request and we will call you back."
       />
 
-      <Section className="grid gap-8 lg:grid-cols-2">
+      <Section className="grid gap-6 sm:gap-8 lg:grid-cols-2">
         <div className="space-y-4">
           <a
             href={telHref}
-            className="flex items-center gap-4 rounded-2xl border border-border bg-card p-5 transition-shadow hover:shadow-[var(--shadow-card)]"
+            className="flex items-center gap-4 rounded-2xl border border-border bg-card p-5 transition-shadow hover:shadow-card"
           >
             <span className="flex h-12 w-12 items-center justify-center rounded-xl bg-primary text-primary-foreground">
               <Phone className="h-5 w-5" />
@@ -51,7 +51,7 @@ function ContactPage() {
             href={whatsappHref()}
             target="_blank"
             rel="noopener noreferrer"
-            className="flex items-center gap-4 rounded-2xl border border-border bg-card p-5 transition-shadow hover:shadow-[var(--shadow-card)]"
+            className="flex items-center gap-4 rounded-2xl border border-border bg-card p-5 transition-shadow hover:shadow-card"
           >
             <span className="flex h-12 w-12 items-center justify-center rounded-xl bg-whatsapp text-whatsapp-foreground">
               <MessageCircle className="h-5 w-5" />
@@ -66,7 +66,7 @@ function ContactPage() {
 
           <a
             href={`mailto:${business.email}`}
-            className="flex items-center gap-4 rounded-2xl border border-border bg-card p-5 transition-shadow hover:shadow-[var(--shadow-card)]"
+            className="flex items-center gap-4 rounded-2xl border border-border bg-card p-5 transition-shadow hover:shadow-card"
           >
             <span className="flex h-12 w-12 items-center justify-center rounded-xl bg-secondary text-secondary-foreground">
               <Mail className="h-5 w-5" />

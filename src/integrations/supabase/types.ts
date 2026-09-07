@@ -80,6 +80,87 @@ export type Database = {
         }
         Relationships: []
       }
+      ro_brands: {
+        Row: {
+          created_at: string
+          description: string | null
+          features: string[]
+          id: string
+          image_url: string | null
+          is_active: boolean
+          name: string
+          sort_order: number
+          stages: number | null
+          starting_price_inr: number | null
+          tagline: string | null
+          updated_at: string
+          updated_by: string | null
+          warranty_months: number | null
+        }
+        Insert: {
+          created_at?: string
+          description?: string | null
+          features?: string[]
+          id?: string
+          image_url?: string | null
+          is_active?: boolean
+          name: string
+          sort_order?: number
+          stages?: number | null
+          starting_price_inr?: number | null
+          tagline?: string | null
+          updated_at?: string
+          updated_by?: string | null
+          warranty_months?: number | null
+        }
+        Update: {
+          created_at?: string
+          description?: string | null
+          features?: string[]
+          id?: string
+          image_url?: string | null
+          is_active?: boolean
+          name?: string
+          sort_order?: number
+          stages?: number | null
+          starting_price_inr?: number | null
+          tagline?: string | null
+          updated_at?: string
+          updated_by?: string | null
+          warranty_months?: number | null
+        }
+        Relationships: []
+      }
+      service_areas: {
+        Row: {
+          created_at: string
+          id: string
+          is_active: boolean
+          name: string
+          sort_order: number
+          updated_at: string
+          updated_by: string | null
+        }
+        Insert: {
+          created_at?: string
+          id?: string
+          is_active?: boolean
+          name: string
+          sort_order?: number
+          updated_at?: string
+          updated_by?: string | null
+        }
+        Update: {
+          created_at?: string
+          id?: string
+          is_active?: boolean
+          name?: string
+          sort_order?: number
+          updated_at?: string
+          updated_by?: string | null
+        }
+        Relationships: []
+      }
       user_roles: {
         Row: {
           created_at: string

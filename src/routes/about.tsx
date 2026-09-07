@@ -27,7 +27,7 @@ function AboutPage() {
         subtitle="We are a small, local home maintenance business based in Nagpur. Our team handles everyday household repairs — electrical, plumbing, carpentry and RO water filter work — at your home."
       />
 
-      <Section className="grid gap-10 lg:grid-cols-2">
+      <Section className="grid gap-8 sm:gap-10 lg:grid-cols-2">
         <div className="space-y-4 text-muted-foreground">
           <p>
             Most household problems are small but urgent — a leaking tap, a switch that stopped
@@ -50,7 +50,7 @@ function AboutPage() {
           </p>
         </div>
 
-        <div className="rounded-2xl border border-border bg-surface p-6">
+        <div className="rounded-2xl border border-border bg-surface p-5 sm:p-6">
           <h2 className="text-xl">What you can expect</h2>
           <ul className="mt-5 space-y-3">
             {whyChooseUs.map((item) => (

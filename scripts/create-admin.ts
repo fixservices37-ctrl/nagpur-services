@@ -91,9 +91,15 @@ async function main() {
     `;
   } else {
     const [inserted] = await prisma.$queryRaw<{ id: string }[]>`
+      -- The token/change columns must be empty strings, NOT NULL: GoTrue
+      -- unmarshals them as Go strings and returns "Database error querying
+      -- schema" on any NULL, which is invisible until you try to sign in.
       INSERT INTO auth.users (
         instance_id, id, aud, role, email, encrypted_password, email_confirmed_at,
-        raw_app_meta_data, raw_user_meta_data, created_at, updated_at
+        raw_app_meta_data, raw_user_meta_data, created_at, updated_at,
+        confirmation_token, recovery_token, email_change_token_new, email_change,
+        phone_change, phone_change_token, email_change_token_current,
+        reauthentication_token
       ) VALUES (
         '00000000-0000-0000-0000-000000000000',
         gen_random_uuid(),
@@ -105,7 +111,8 @@ async function main() {
         '{"provider":"email","providers":["email"]}'::jsonb,
         '{}'::jsonb,
         now(),
-        now()
+        now(),
+        '', '', '', '', '', '', '', ''
       )
       RETURNING id::text
     `;
@@ -113,22 +120,30 @@ async function main() {
     if (!inserted) throw new Error("Could not create the auth user.");
     userId = inserted.id;
     created = true;
-
-    // GoTrue needs a matching identity row for email/password sign-in.
-    await prisma.$executeRaw`
-      INSERT INTO auth.identities (
-        id, user_id, provider_id, identity_data, provider, last_sign_in_at, created_at, updated_at
-      ) VALUES (
-        gen_random_uuid(),
-        ${userId}::uuid,
-        ${userId},
-        jsonb_build_object('sub', ${userId}, 'email', ${email}, 'email_verified', true, 'phone_verified', false),
-        'email',
-        now(), now(), now()
-      )
-      ON CONFLICT DO NOTHING
-    `;
   }
+
+  // GoTrue needs a matching identity row for email/password sign-in. Runs for
+  // both new and re-provisioned accounts, and is a no-op if one already exists.
+  // Every string param is cast so Postgres can infer types inside
+  // jsonb_build_object (auth.identities.provider_id is text, not uuid).
+  await prisma.$executeRaw`
+    INSERT INTO auth.identities (
+      id, user_id, provider_id, identity_data, provider, last_sign_in_at, created_at, updated_at
+    ) VALUES (
+      gen_random_uuid(),
+      ${userId}::uuid,
+      ${userId}::text,
+      jsonb_build_object(
+        'sub', ${userId}::text,
+        'email', ${email}::text,
+        'email_verified', true,
+        'phone_verified', false
+      ),
+      'email',
+      now(), now(), now()
+    )
+    ON CONFLICT (provider_id, provider) DO NOTHING
+  `;
 
   await prisma.userRole.upsert({
     where: { userId_role: { userId, role } },

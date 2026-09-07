@@ -21,11 +21,14 @@ import { Route as HowItWorksRouteImport } from './routes/how-it-works'
 import { Route as PlumbingRouteImport } from './routes/plumbing'
 import { Route as RequestServiceRouteImport } from './routes/request-service'
 import { Route as ReviewsRouteImport } from './routes/reviews'
+import { Route as RoInstallationRouteImport } from './routes/ro-installation'
 import { Route as RoServiceRouteImport } from './routes/ro-service'
 import { Route as ServiceAreasRouteImport } from './routes/service-areas'
 import { Route as ServicesRouteImport } from './routes/services'
 import { Route as AdminIndexRouteImport } from './routes/admin/index'
 import { Route as AdminLoginRouteImport } from './routes/admin/login'
+import { Route as AdminRoBrandsRouteImport } from './routes/admin/ro-brands'
+import { Route as AdminServiceAreasRouteImport } from './routes/admin/service-areas'
 import { Route as AdminRequestsIndexRouteImport } from './routes/admin/requests/index'
 import { Route as AdminRequestsIdRouteImport } from './routes/admin/requests/$id'
 
@@ -89,6 +92,11 @@ const ReviewsRoute = ReviewsRouteImport.update({
   path: '/reviews',
   getParentRoute: () => rootRouteImport,
 } as any)
+const RoInstallationRoute = RoInstallationRouteImport.update({
+  id: '/ro-installation',
+  path: '/ro-installation',
+  getParentRoute: () => rootRouteImport,
+} as any)
 const RoServiceRoute = RoServiceRouteImport.update({
   id: '/ro-service',
   path: '/ro-service',
@@ -112,6 +120,16 @@ const AdminIndexRoute = AdminIndexRouteImport.update({
 const AdminLoginRoute = AdminLoginRouteImport.update({
   id: '/login',
   path: '/login',
+  getParentRoute: () => AdminRouteRoute,
+} as any)
+const AdminRoBrandsRoute = AdminRoBrandsRouteImport.update({
+  id: '/ro-brands',
+  path: '/ro-brands',
+  getParentRoute: () => AdminRouteRoute,
+} as any)
+const AdminServiceAreasRoute = AdminServiceAreasRouteImport.update({
+  id: '/service-areas',
+  path: '/service-areas',
   getParentRoute: () => AdminRouteRoute,
 } as any)
 const AdminRequestsIndexRoute = AdminRequestsIndexRouteImport.update({
@@ -138,10 +156,13 @@ export interface FileRoutesByFullPath {
   '/plumbing': typeof PlumbingRoute
   '/request-service': typeof RequestServiceRoute
   '/reviews': typeof ReviewsRoute
+  '/ro-installation': typeof RoInstallationRoute
   '/ro-service': typeof RoServiceRoute
   '/service-areas': typeof ServiceAreasRoute
   '/services': typeof ServicesRoute
   '/admin/login': typeof AdminLoginRoute
+  '/admin/ro-brands': typeof AdminRoBrandsRoute
+  '/admin/service-areas': typeof AdminServiceAreasRoute
   '/admin/': typeof AdminIndexRoute
   '/admin/requests/$id': typeof AdminRequestsIdRoute
   '/admin/requests/': typeof AdminRequestsIndexRoute
@@ -158,10 +179,13 @@ export interface FileRoutesByTo {
   '/plumbing': typeof PlumbingRoute
   '/request-service': typeof RequestServiceRoute
   '/reviews': typeof ReviewsRoute
+  '/ro-installation': typeof RoInstallationRoute
   '/ro-service': typeof RoServiceRoute
   '/service-areas': typeof ServiceAreasRoute
   '/services': typeof ServicesRoute
   '/admin/login': typeof AdminLoginRoute
+  '/admin/ro-brands': typeof AdminRoBrandsRoute
+  '/admin/service-areas': typeof AdminServiceAreasRoute
   '/admin': typeof AdminIndexRoute
   '/admin/requests/$id': typeof AdminRequestsIdRoute
   '/admin/requests': typeof AdminRequestsIndexRoute
@@ -180,10 +204,13 @@ export interface FileRoutesById {
   '/plumbing': typeof PlumbingRoute
   '/request-service': typeof RequestServiceRoute
   '/reviews': typeof ReviewsRoute
+  '/ro-installation': typeof RoInstallationRoute
   '/ro-service': typeof RoServiceRoute
   '/service-areas': typeof ServiceAreasRoute
   '/services': typeof ServicesRoute
   '/admin/login': typeof AdminLoginRoute
+  '/admin/ro-brands': typeof AdminRoBrandsRoute
+  '/admin/service-areas': typeof AdminServiceAreasRoute
   '/admin/': typeof AdminIndexRoute
   '/admin/requests/$id': typeof AdminRequestsIdRoute
   '/admin/requests/': typeof AdminRequestsIndexRoute
@@ -203,10 +230,13 @@ export interface FileRouteTypes {
     | '/plumbing'
     | '/request-service'
     | '/reviews'
+    | '/ro-installation'
     | '/ro-service'
     | '/service-areas'
     | '/services'
     | '/admin/login'
+    | '/admin/ro-brands'
+    | '/admin/service-areas'
     | '/admin/'
     | '/admin/requests/$id'
     | '/admin/requests/'
@@ -223,10 +253,13 @@ export interface FileRouteTypes {
     | '/plumbing'
     | '/request-service'
     | '/reviews'
+    | '/ro-installation'
     | '/ro-service'
     | '/service-areas'
     | '/services'
     | '/admin/login'
+    | '/admin/ro-brands'
+    | '/admin/service-areas'
     | '/admin'
     | '/admin/requests/$id'
     | '/admin/requests'
@@ -244,10 +277,13 @@ export interface FileRouteTypes {
     | '/plumbing'
     | '/request-service'
     | '/reviews'
+    | '/ro-installation'
     | '/ro-service'
     | '/service-areas'
     | '/services'
     | '/admin/login'
+    | '/admin/ro-brands'
+    | '/admin/service-areas'
     | '/admin/'
     | '/admin/requests/$id'
     | '/admin/requests/'
@@ -266,6 +302,7 @@ export interface RootRouteChildren {
   PlumbingRoute: typeof PlumbingRoute
   RequestServiceRoute: typeof RequestServiceRoute
   ReviewsRoute: typeof ReviewsRoute
+  RoInstallationRoute: typeof RoInstallationRoute
   RoServiceRoute: typeof RoServiceRoute
   ServiceAreasRoute: typeof ServiceAreasRoute
   ServicesRoute: typeof ServicesRoute
@@ -357,6 +394,13 @@ declare module '@tanstack/react-router' {
       preLoaderRoute: typeof ReviewsRouteImport
       parentRoute: typeof rootRouteImport
     }
+    '/ro-installation': {
+      id: '/ro-installation'
+      path: '/ro-installation'
+      fullPath: '/ro-installation'
+      preLoaderRoute: typeof RoInstallationRouteImport
+      parentRoute: typeof rootRouteImport
+    }
     '/ro-service': {
       id: '/ro-service'
       path: '/ro-service'
@@ -392,6 +436,20 @@ declare module '@tanstack/react-router' {
       preLoaderRoute: typeof AdminLoginRouteImport
       parentRoute: typeof AdminRouteRoute
     }
+    '/admin/ro-brands': {
+      id: '/admin/ro-brands'
+      path: '/ro-brands'
+      fullPath: '/admin/ro-brands'
+      preLoaderRoute: typeof AdminRoBrandsRouteImport
+      parentRoute: typeof AdminRouteRoute
+    }
+    '/admin/service-areas': {
+      id: '/admin/service-areas'
+      path: '/service-areas'
+      fullPath: '/admin/service-areas'
+      preLoaderRoute: typeof AdminServiceAreasRouteImport
+      parentRoute: typeof AdminRouteRoute
+    }
     '/admin/requests/': {
       id: '/admin/requests/'
       path: '/requests'
@@ -411,6 +469,8 @@ declare module '@tanstack/react-router' {
 
 interface AdminRouteRouteChildren {
   AdminLoginRoute: typeof AdminLoginRoute
+  AdminRoBrandsRoute: typeof AdminRoBrandsRoute
+  AdminServiceAreasRoute: typeof AdminServiceAreasRoute
   AdminIndexRoute: typeof AdminIndexRoute
   AdminRequestsIdRoute: typeof AdminRequestsIdRoute
   AdminRequestsIndexRoute: typeof AdminRequestsIndexRoute
@@ -418,6 +478,8 @@ interface AdminRouteRouteChildren {
 
 const AdminRouteRouteChildren: AdminRouteRouteChildren = {
   AdminLoginRoute: AdminLoginRoute,
+  AdminRoBrandsRoute: AdminRoBrandsRoute,
+  AdminServiceAreasRoute: AdminServiceAreasRoute,
   AdminIndexRoute: AdminIndexRoute,
   AdminRequestsIdRoute: AdminRequestsIdRoute,
   AdminRequestsIndexRoute: AdminRequestsIndexRoute,
@@ -440,6 +502,7 @@ const rootRouteChildren: RootRouteChildren = {
   PlumbingRoute: PlumbingRoute,
   RequestServiceRoute: RequestServiceRoute,
   ReviewsRoute: ReviewsRoute,
+  RoInstallationRoute: RoInstallationRoute,
   RoServiceRoute: RoServiceRoute,
   ServiceAreasRoute: ServiceAreasRoute,
   ServicesRoute: ServicesRoute,

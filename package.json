@@ -15,6 +15,7 @@
     "db:generate": "prisma generate",
     "db:pull": "prisma db pull && prisma generate",
     "db:studio": "prisma studio",
+    "db:apply": "tsx --env-file-if-exists=.env.local --env-file-if-exists=.env scripts/apply-migrations.ts",
     "admin:create": "tsx --env-file-if-exists=.env.local --env-file-if-exists=.env scripts/create-admin.ts",
     "admin:list": "tsx --env-file-if-exists=.env.local --env-file-if-exists=.env scripts/list-admins.ts"
   },

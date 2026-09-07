@@ -1,7 +1,11 @@
 import { useMutation, useQuery, useQueryClient } from "@tanstack/react-query";
 
 import { supabase } from "@/integrations/supabase/client";
+import type { Tables } from "@/integrations/supabase/types";
 import type { RequestStatus, ServiceRequest } from "@/lib/admin";
+
+export type ServiceArea = Tables<"service_areas">;
+export type RoBrand = Tables<"ro_brands">;
 
 export interface RequestFilters {
   status: string;
@@ -187,6 +191,226 @@ export function useUpdateRequest(id: string) {
       void queryClient.invalidateQueries({ queryKey: ["admin", "requests"] });
       void queryClient.invalidateQueries({ queryKey: ["admin", "stats"] });
       void queryClient.invalidateQueries({ queryKey: ["admin", "recent"] });
+    },
+  });
+}
+
+// ---------------------------------------------------------------------------
+// Service areas
+// ---------------------------------------------------------------------------
+
+/** Every area, including deactivated ones. Only staff can see deactivated rows. */
+export function useServiceAreasAdmin(enabled: boolean) {
+  return useQuery({
+    queryKey: ["admin", "service-areas"],
+    enabled,
+    queryFn: async () => {
+      const { data, error } = await supabase
+        .from("service_areas")
+        .select("*")
+        .order("sort_order", { ascending: true })
+        .order("name", { ascending: true });
+      if (error) throw error;
+      return (data ?? []) as ServiceArea[];
+    },
+  });
+}
+
+export function useCreateServiceArea() {
+  const queryClient = useQueryClient();
+  return useMutation({
+    mutationFn: async (input: { name: string; sortOrder?: number }) => {
+      const { data, error } = await supabase
+        .from("service_areas")
+        .insert({
+          name: input.name.trim(),
+          sort_order: input.sortOrder ?? 100,
+        })
+        .select("*")
+        .single();
+      if (error) throw error;
+      return data as ServiceArea;
+    },
+    onSuccess: () => {
+      void queryClient.invalidateQueries({ queryKey: ["admin", "service-areas"] });
+      void queryClient.invalidateQueries({ queryKey: ["public", "service-areas"] });
+    },
+  });
+}
+
+interface ServiceAreaPatch {
+  name?: string;
+  is_active?: boolean;
+  sort_order?: number;
+}
+
+export function useUpdateServiceArea() {
+  const queryClient = useQueryClient();
+  return useMutation({
+    mutationFn: async (input: { id: string; patch: ServiceAreaPatch }) => {
+      const patch: ServiceAreaPatch = {};
+      if (input.patch.name !== undefined) patch.name = input.patch.name.trim();
+      if (input.patch.is_active !== undefined) patch.is_active = input.patch.is_active;
+      if (input.patch.sort_order !== undefined) patch.sort_order = input.patch.sort_order;
+
+      const { data, error } = await supabase
+        .from("service_areas")
+        .update(patch)
+        .eq("id", input.id)
+        .select("*")
+        .single();
+      if (error) throw error;
+      return data as ServiceArea;
+    },
+    onSuccess: () => {
+      void queryClient.invalidateQueries({ queryKey: ["admin", "service-areas"] });
+      void queryClient.invalidateQueries({ queryKey: ["public", "service-areas"] });
+    },
+  });
+}
+
+export function useDeleteServiceArea() {
+  const queryClient = useQueryClient();
+  return useMutation({
+    mutationFn: async (id: string) => {
+      const { error } = await supabase.from("service_areas").delete().eq("id", id);
+      if (error) throw error;
+    },
+    onSuccess: () => {
+      void queryClient.invalidateQueries({ queryKey: ["admin", "service-areas"] });
+      void queryClient.invalidateQueries({ queryKey: ["public", "service-areas"] });
+    },
+  });
+}
+
+// ---------------------------------------------------------------------------
+// RO installation brands
+// ---------------------------------------------------------------------------
+
+export function useRoBrandsAdmin(enabled: boolean) {
+  return useQuery({
+    queryKey: ["admin", "ro-brands"],
+    enabled,
+    queryFn: async () => {
+      const { data, error } = await supabase
+        .from("ro_brands")
+        .select("*")
+        .order("sort_order", { ascending: true })
+        .order("name", { ascending: true });
+      if (error) throw error;
+      return (data ?? []) as RoBrand[];
+    },
+  });
+}
+
+export interface RoBrandInput {
+  name: string;
+  tagline?: string | undefined;
+  description?: string | undefined;
+  imageUrl?: string | undefined;
+  features?: string[] | undefined;
+  stages?: number | undefined;
+  warrantyMonths?: number | undefined;
+  startingPriceInr?: number | undefined;
+  sortOrder?: number | undefined;
+}
+
+export function useCreateRoBrand() {
+  const queryClient = useQueryClient();
+  return useMutation({
+    mutationFn: async (input: RoBrandInput) => {
+      const { data, error } = await supabase
+        .from("ro_brands")
+        .insert({
+          name: input.name.trim(),
+          tagline: input.tagline?.trim() || null,
+          description: input.description?.trim() || null,
+          image_url: input.imageUrl?.trim() || null,
+          features: normaliseFeatures(input.features),
+          stages: input.stages ?? null,
+          warranty_months: input.warrantyMonths ?? null,
+          starting_price_inr: input.startingPriceInr ?? null,
+          sort_order: input.sortOrder ?? 100,
+        })
+        .select("*")
+        .single();
+      if (error) throw error;
+      return data as RoBrand;
+    },
+    onSuccess: () => {
+      void queryClient.invalidateQueries({ queryKey: ["admin", "ro-brands"] });
+      void queryClient.invalidateQueries({ queryKey: ["public", "ro-brands"] });
+    },
+  });
+}
+
+interface RoBrandPatch {
+  name?: string;
+  tagline?: string | null;
+  description?: string | null;
+  image_url?: string | null;
+  features?: string[];
+  stages?: number | null;
+  warranty_months?: number | null;
+  starting_price_inr?: number | null;
+  is_active?: boolean;
+  sort_order?: number;
+}
+
+function normaliseFeatures(features?: string[] | undefined) {
+  if (!features) return [];
+  return features
+    .map((entry) => entry.trim())
+    .filter((entry, index, all) => entry.length > 0 && all.indexOf(entry) === index)
+    .slice(0, 8);
+}
+
+export function useUpdateRoBrand() {
+  const queryClient = useQueryClient();
+  return useMutation({
+    mutationFn: async (input: { id: string; patch: RoBrandPatch }) => {
+      const patch: RoBrandPatch = {};
+      if (input.patch.name !== undefined) patch.name = input.patch.name.trim();
+      if (input.patch.tagline !== undefined) patch.tagline = input.patch.tagline?.trim() || null;
+      if (input.patch.description !== undefined)
+        patch.description = input.patch.description?.trim() || null;
+      if (input.patch.image_url !== undefined)
+        patch.image_url = input.patch.image_url?.trim() || null;
+      if (input.patch.features !== undefined) patch.features = normaliseFeatures(input.patch.features);
+      if (input.patch.stages !== undefined) patch.stages = input.patch.stages;
+      if (input.patch.warranty_months !== undefined)
+        patch.warranty_months = input.patch.warranty_months;
+      if (input.patch.starting_price_inr !== undefined)
+        patch.starting_price_inr = input.patch.starting_price_inr;
+      if (input.patch.is_active !== undefined) patch.is_active = input.patch.is_active;
+      if (input.patch.sort_order !== undefined) patch.sort_order = input.patch.sort_order;
+
+      const { data, error } = await supabase
+        .from("ro_brands")
+        .update(patch)
+        .eq("id", input.id)
+        .select("*")
+        .single();
+      if (error) throw error;
+      return data as RoBrand;
+    },
+    onSuccess: () => {
+      void queryClient.invalidateQueries({ queryKey: ["admin", "ro-brands"] });
+      void queryClient.invalidateQueries({ queryKey: ["public", "ro-brands"] });
+    },
+  });
+}
+
+export function useDeleteRoBrand() {
+  const queryClient = useQueryClient();
+  return useMutation({
+    mutationFn: async (id: string) => {
+      const { error } = await supabase.from("ro_brands").delete().eq("id", id);
+      if (error) throw error;
+    },
+    onSuccess: () => {
+      void queryClient.invalidateQueries({ queryKey: ["admin", "ro-brands"] });
+      void queryClient.invalidateQueries({ queryKey: ["public", "ro-brands"] });
     },
   });
 }

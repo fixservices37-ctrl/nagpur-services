@@ -32,9 +32,9 @@ function ReviewsPage() {
           <code className="rounded bg-background px-1 py-0.5 text-xs">src/lib/services.ts</code>.
         </div>
 
-        <div className="mt-8 grid gap-5 sm:grid-cols-2 lg:grid-cols-3">
+        <div className="mt-6 grid gap-4 sm:mt-8 sm:grid-cols-2 sm:gap-5 lg:grid-cols-3">
           {placeholderReviews.map((review, i) => (
-            <figure key={i} className="rounded-2xl border border-border bg-card p-6">
+            <figure key={i} className="rounded-2xl border border-border bg-card p-5 sm:p-6">
               <Quote className="h-6 w-6 text-primary" />
               <blockquote className="mt-3 text-sm text-muted-foreground">{review.text}</blockquote>
               <figcaption className="mt-4 border-t border-border pt-4 text-sm">
@@ -47,7 +47,7 @@ function ReviewsPage() {
           ))}
         </div>
 
-        <Button variant="accent" size="lg" className="mt-8" asChild>
+        <Button variant="accent" size="lg" className="mt-8 w-full sm:w-auto" asChild>
           <Link to="/request-service">Request a Service</Link>
         </Button>
       </Section>

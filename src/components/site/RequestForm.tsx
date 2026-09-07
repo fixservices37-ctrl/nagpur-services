@@ -40,7 +40,13 @@ type Result = {
   mobile: string;
 };
 
-export function RequestForm({ initialService }: { initialService?: ServiceValue | undefined }) {
+export function RequestForm({
+  initialService,
+  initialProblem,
+}: {
+  initialService?: ServiceValue | undefined;
+  initialProblem?: string | undefined;
+}) {
   const [service, setService] = useState<ServiceValue>(initialService ?? "Electrical");
   const [photos, setPhotos] = useState<File[]>([]);
   const [coords, setCoords] = useState<{ lat: number; lng: number } | null>(null);
@@ -176,7 +182,7 @@ export function RequestForm({ initialService }: { initialService?: ServiceValue 
 
   return (
     <form onSubmit={onSubmit} noValidate className="space-y-8">
-      <fieldset className="rounded-2xl border border-border bg-card p-5 sm:p-6">
+      <fieldset className="rounded-2xl border border-border bg-card p-4 sm:p-6">
         <legend className="px-2 font-display text-sm font-bold uppercase tracking-wide text-primary">
           Your details
         </legend>
@@ -199,7 +205,7 @@ export function RequestForm({ initialService }: { initialService?: ServiceValue 
         </div>
       </fieldset>
 
-      <fieldset className="rounded-2xl border border-border bg-card p-5 sm:p-6">
+      <fieldset className="rounded-2xl border border-border bg-card p-4 sm:p-6">
         <legend className="px-2 font-display text-sm font-bold uppercase tracking-wide text-primary">
           Service needed
         </legend>
@@ -243,13 +249,14 @@ export function RequestForm({ initialService }: { initialService?: ServiceValue 
               rows={4}
               maxLength={2000}
               placeholder="Example: Kitchen tap is leaking and needs repair."
+              defaultValue={initialProblem ?? ""}
               required
             />
           </Field>
         </div>
       </fieldset>
 
-      <fieldset className="rounded-2xl border border-border bg-card p-5 sm:p-6">
+      <fieldset className="rounded-2xl border border-border bg-card p-4 sm:p-6">
         <legend className="px-2 font-display text-sm font-bold uppercase tracking-wide text-primary">
           Address
         </legend>
@@ -296,7 +303,7 @@ export function RequestForm({ initialService }: { initialService?: ServiceValue 
         </div>
       </fieldset>
 
-      <fieldset className="rounded-2xl border border-border bg-card p-5 sm:p-6">
+      <fieldset className="rounded-2xl border border-border bg-card p-4 sm:p-6">
         <legend className="px-2 font-display text-sm font-bold uppercase tracking-wide text-primary">
           Preferred visit
         </legend>
@@ -313,7 +320,7 @@ export function RequestForm({ initialService }: { initialService?: ServiceValue 
         </p>
       </fieldset>
 
-      <fieldset className="rounded-2xl border border-border bg-card p-5 sm:p-6">
+      <fieldset className="rounded-2xl border border-border bg-card p-4 sm:p-6">
         <legend className="px-2 font-display text-sm font-bold uppercase tracking-wide text-primary">
           Photos (optional)
         </legend>

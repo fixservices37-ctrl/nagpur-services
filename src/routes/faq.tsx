@@ -55,7 +55,7 @@ function FaqPage() {
           ))}
         </Accordion>
 
-        <Button variant="accent" size="lg" className="mt-8" asChild>
+        <Button variant="accent" size="lg" className="mt-8 w-full sm:w-auto" asChild>
           <Link to="/request-service">Request a Service</Link>
         </Button>
       </Section>

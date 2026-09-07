@@ -19,6 +19,19 @@ export interface Service {
   cta: string;
   image: string;
   items: string[];
+  /**
+   * Optional secondary call-to-action for a distinct intent (e.g. a new
+   * installation vs a repair). Only rendered on the service detail page.
+   *
+   * If `brandChooserPath` is set, the button links there so the customer can
+   * pick a brand first. Otherwise it jumps straight into the request form
+   * with `prefilledProblem` dropped into the problem textarea.
+   */
+  installationCta?: {
+    label: string;
+    prefilledProblem: string;
+    brandChooserPath?: "/ro-installation";
+  };
 }
 
 export const services: Service[] = [
@@ -91,6 +104,12 @@ export const services: Service[] = [
       "Annual maintenance / service",
       "Other water purifier problems",
     ],
+    installationCta: {
+      label: "New RO Installation",
+      prefilledProblem:
+        "I would like a new RO / water purifier installation. Please call to discuss the model, requirements and price.",
+      brandChooserPath: "/ro-installation",
+    },
   },
   {
     slug: "cleaning",

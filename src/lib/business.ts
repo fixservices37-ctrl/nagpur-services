@@ -10,12 +10,10 @@ export const business = {
   city: "Nagpur",
   state: "Maharashtra",
 
-  // PLACEHOLDER phone — replace with the real business number (digits only, with country code).
-  phone: "+919000000000",
-  phoneDisplay: "+91 90000 00000",
+  phone: "+918830311120",
+  phoneDisplay: "+91 88303 11120",
 
-  // PLACEHOLDER WhatsApp number — usually the same as the phone number.
-  whatsapp: "919000000000",
+  whatsapp: "918830311120",
 
   // PLACEHOLDER email — replace with the business email.
   email: "hello@example.com",

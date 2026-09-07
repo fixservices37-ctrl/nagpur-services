@@ -192,5 +192,29 @@
   width: 100%;
   margin-inline: auto;
   max-width: 76rem;
-  padding-inline: 1.25rem;
+  /* Scales from tight mobile margins to generous desktop ones so long text
+     lines never crowd the viewport edge on any screen. */
+  padding-inline: 1rem;
+
+  @media (min-width: 40rem) {
+    padding-inline: 1.5rem;
+  }
+
+  @media (min-width: 64rem) {
+    padding-inline: 2rem;
+  }
+}
+
+@layer base {
+  /* Prevent horizontal overflow from long words / URLs on small screens. */
+  html,
+  body {
+    overflow-x: hidden;
+  }
+  img,
+  svg,
+  video {
+    max-width: 100%;
+    height: auto;
+  }
 }
