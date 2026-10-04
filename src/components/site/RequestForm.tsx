@@ -406,7 +406,7 @@ function Field({
 
 function SuccessCard({ result }: { result: Result }) {
   return (
-    <div className="rounded-2xl border border-border bg-card p-6 text-center shadow-[var(--shadow-card)] sm:p-10">
+    <div className="rounded-2xl border border-border bg-card p-6 text-center shadow-card sm:p-10">
       <span className="mx-auto flex h-14 w-14 items-center justify-center rounded-full bg-whatsapp/15">
         <CheckCircle2 className="h-7 w-7 text-whatsapp" />
       </span>
@@ -423,13 +423,13 @@ function SuccessCard({ result }: { result: Result }) {
         <Row label="Phone" value={result.mobile} />
       </dl>
 
-      <div className="mt-7 flex flex-wrap justify-center gap-3">
-        <Button size="lg" asChild>
+      <div className="mt-7 grid gap-2 sm:flex sm:flex-wrap sm:justify-center sm:gap-3">
+        <Button size="lg" asChild className="w-full sm:w-auto">
           <a href={telHref}>
             <Phone /> Call Us
           </a>
         </Button>
-        <Button variant="whatsapp" size="lg" asChild>
+        <Button variant="whatsapp" size="lg" asChild className="w-full sm:w-auto">
           <a
             href={whatsappHref(`Hi, I submitted service request ${result.request_number}.`)}
             target="_blank"

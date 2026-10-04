@@ -1,21 +1,22 @@
 /**
  * Placeholder banner for a RO brand card. Renders when the brand row has no
- * `image_url` set. Deliberately generic — a stylised water-purifier silhouette
- * against a tinted background — so the site does not ship any third-party
- * product photograph. The owner replaces the visual by pasting a real image
- * URL into the admin form.
+ * `image_url` set. Deliberately generic — a centred monogram against a soft
+ * gradient, decorated with a few water drops — so the site does not ship any
+ * third-party product photograph. The owner replaces the visual by pasting a
+ * real image URL into the admin form.
  *
- * The tint rotates through the theme's chart palette based on the brand's
- * position in the list, so the four seeded brands look visually distinct
- * without hard-coding a colour per brand.
+ * The tint rotates through a small palette based on the brand's position in
+ * the list, so the seeded brands look visually distinct without hard-coding a
+ * colour per brand. Composition is centred so `xMidYMid slice` cropping at
+ * narrow card widths never cuts off the visible text.
  */
 const PALETTES = [
-  { bg: "#dcecff", stroke: "#1f4a7a", accent: "#2f6fb5" },
-  { bg: "#dff3e6", stroke: "#1f5a35", accent: "#2f8a56" },
-  { bg: "#efe8fb", stroke: "#3a2c68", accent: "#6a4fb3" },
-  { bg: "#fdefe0", stroke: "#7a4b1a", accent: "#c17b34" },
-  { bg: "#e8f1ef", stroke: "#204d47", accent: "#3d8479" },
-  { bg: "#f3dee6", stroke: "#651e40", accent: "#a94778" },
+  { bg: "#e3edff", stroke: "#1f4a7a", accent: "#2f6fb5" },
+  { bg: "#e2f4e9", stroke: "#1f5a35", accent: "#2f8a56" },
+  { bg: "#efe6fa", stroke: "#3a2c68", accent: "#6a4fb3" },
+  { bg: "#fceedf", stroke: "#7a4b1a", accent: "#c17b34" },
+  { bg: "#e7f2ef", stroke: "#204d47", accent: "#3d8479" },
+  { bg: "#f7e0e8", stroke: "#651e40", accent: "#a94778" },
 ] as const;
 
 interface BrandVisualProps {
@@ -35,78 +36,78 @@ export function BrandVisual({ imageUrl, name, index }: BrandVisualProps) {
         alt={name}
         loading="lazy"
         decoding="async"
-        className="h-52 w-full rounded-t-2xl object-cover"
+        className="aspect-video w-full rounded-t-2xl object-cover"
       />
     );
   }
 
   const palette = PALETTES[index % PALETTES.length]!;
-  const initials = name
-    .split(/\s+/)
-    .map((part) => part[0]?.toUpperCase() ?? "")
-    .join("")
-    .slice(0, 3);
+  const initials =
+    name
+      .split(/\s+/)
+      .map((part) => part[0]?.toUpperCase() ?? "")
+      .join("")
+      .slice(0, 2) || "RO";
 
   return (
     <svg
-      viewBox="0 0 800 320"
+      viewBox="0 0 640 360"
       role="img"
       aria-label={`${name} — placeholder image`}
-      className="h-52 w-full rounded-t-2xl"
+      className="aspect-video w-full rounded-t-2xl"
       preserveAspectRatio="xMidYMid slice"
     >
       <defs>
-        <linearGradient id={`bg-${index}`} x1="0" y1="0" x2="0" y2="1">
+        <linearGradient id={`bg-${index}`} x1="0" y1="0" x2="1" y2="1">
           <stop offset="0" stopColor={palette.bg} />
           <stop offset="1" stopColor="#ffffff" />
         </linearGradient>
       </defs>
-      <rect width="800" height="320" fill={`url(#bg-${index})`} />
+      <rect width="640" height="360" fill={`url(#bg-${index})`} />
 
-      {/* Countertop shadow */}
-      <ellipse cx="530" cy="288" rx="180" ry="10" fill={palette.stroke} opacity="0.10" />
-
-      {/* Stylised purifier silhouette — generic rounded body + tank stripe */}
-      <g transform="translate(400 60)">
-        <rect x="0" y="0" width="220" height="220" rx="18" fill="#ffffff" stroke={palette.stroke} strokeWidth="3" />
-        <rect x="18" y="18" width="90" height="42" rx="6" fill={palette.accent} opacity="0.15" />
-        <rect x="18" y="72" width="90" height="8" rx="4" fill={palette.accent} opacity="0.35" />
-        <rect x="18" y="86" width="70" height="6" rx="3" fill={palette.accent} opacity="0.25" />
-        <rect x="130" y="18" width="72" height="184" rx="10" fill={palette.accent} opacity="0.18" />
-        {/* Tap */}
-        <rect x="152" y="200" width="28" height="14" rx="3" fill={palette.stroke} />
-        <rect x="160" y="214" width="12" height="12" rx="2" fill={palette.stroke} />
-        {/* Water droplet */}
-        <path
-          d="M166 240 c 6 8 12 14 12 22 a 12 12 0 1 1 -24 0 c 0 -8 6 -14 12 -22 z"
-          fill={palette.accent}
-        />
+      {/* Soft water-drop confetti — decorative, kept away from the centre so
+          it survives any aspect-ratio crop. */}
+      <g fill={palette.accent} opacity="0.14">
+        <circle cx="72" cy="72" r="26" />
+        <circle cx="560" cy="90" r="34" />
+        <circle cx="590" cy="290" r="22" />
+        <circle cx="90" cy="300" r="18" />
+        <circle cx="130" cy="200" r="10" />
+        <circle cx="510" cy="200" r="12" />
       </g>
 
-      {/* Initials monogram on the left */}
-      <g transform="translate(80 130)">
-        <circle cx="60" cy="30" r="46" fill="#ffffff" stroke={palette.stroke} strokeWidth="2" />
+      {/* Centred monogram — big circle + initials on top, brand name below. */}
+      <g transform="translate(320 180)">
+        <circle
+          cx="0"
+          cy="-24"
+          r="58"
+          fill="#ffffff"
+          stroke={palette.stroke}
+          strokeWidth="2"
+          opacity="0.95"
+        />
         <text
-          x="60"
-          y="42"
+          x="0"
+          y="-9"
           textAnchor="middle"
           fontFamily="Outfit, ui-sans-serif, system-ui, sans-serif"
           fontWeight="700"
-          fontSize="28"
+          fontSize="42"
           fill={palette.stroke}
         >
-          {initials || "RO"}
+          {initials}
         </text>
         <text
-          x="60"
-          y="98"
+          x="0"
+          y="72"
           textAnchor="middle"
           fontFamily="Figtree, ui-sans-serif, system-ui, sans-serif"
-          fontSize="12"
+          fontWeight="600"
+          fontSize="22"
           fill={palette.stroke}
-          opacity="0.7"
         >
-          Placeholder
+          {name}
         </text>
       </g>
     </svg>

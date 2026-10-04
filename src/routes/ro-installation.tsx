@@ -85,9 +85,9 @@ function BrandCard({ brand, index }: { brand: PublicRoBrand; index: number }) {
       <BrandVisual imageUrl={brand.imageUrl} name={brand.name} index={index} />
 
       <div className="flex flex-1 flex-col p-5">
-        <h2 className="text-lg leading-tight">{brand.name}</h2>
+        <h2 className="text-xl leading-tight">{brand.name}</h2>
         {brand.tagline && (
-          <p className="mt-0.5 text-sm font-medium text-primary">{brand.tagline}</p>
+          <p className="mt-1 text-sm font-medium text-primary">{brand.tagline}</p>
         )}
 
         {hasMeta && (
@@ -148,20 +148,25 @@ function BrandCard({ brand, index }: { brand: PublicRoBrand; index: number }) {
 
 function RecommendCard() {
   return (
-    <article className="flex flex-col overflow-hidden rounded-2xl border border-dashed border-border bg-surface p-5">
-      <span className="mb-4 flex h-10 w-10 items-center justify-center rounded-xl bg-accent/20 text-accent-foreground">
-        <Sparkles className="h-5 w-5" />
-      </span>
-      <h2 className="text-lg leading-tight">Not sure which one?</h2>
-      <p className="mt-2 text-sm text-muted-foreground">
-        Tell us about your family size, water source and budget. We'll suggest a brand and model
-        that fits your home.
-      </p>
+    <article className="flex flex-col overflow-hidden rounded-2xl border border-dashed border-border bg-card shadow-card">
+      {/* Matches the height of BrandVisual so the CTA row lines up across the grid. */}
+      <div className="flex aspect-video w-full items-center justify-center bg-accent/15">
+        <span className="flex h-16 w-16 items-center justify-center rounded-2xl bg-accent text-accent-foreground shadow-card">
+          <Sparkles className="h-7 w-7" />
+        </span>
+      </div>
 
-      <div className="mt-4 flex-1" />
+      <div className="flex flex-1 flex-col p-5">
+        <h2 className="text-xl leading-tight">Not sure which one?</h2>
+        <p className="mt-1 text-sm font-medium text-primary">Let us recommend one</p>
+        <p className="mt-4 text-sm text-muted-foreground">
+          Tell us about your family size, water source and budget. We'll suggest a brand and model
+          that fits your home.
+        </p>
 
-      <div className="flex flex-col gap-2">
-        <Button variant="default" size="lg" asChild>
+        <div className="mt-5 flex-1" />
+
+        <Button variant="default" size="lg" asChild className="w-full">
           <Link
             to="/request-service"
             search={{ service: "RO / Water Filter", intent: "installation" }}
@@ -169,7 +174,7 @@ function RecommendCard() {
             Ask for a recommendation <ArrowRight />
           </Link>
         </Button>
-        <Button variant="whatsapp" size="lg" asChild>
+        <Button variant="whatsapp" size="lg" asChild className="mt-2 w-full">
           <a
             href={whatsappHref(
               "Hi, I would like a recommendation for a new RO / water purifier for my home in Nagpur.",
